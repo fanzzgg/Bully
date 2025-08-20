@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardian of Harmony - Komik Anti Bullying</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            font-family: 'Verdana', sans-serif;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .comic-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .page-indicator {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .comic-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin: 20px 0;
+        }
+        
+        .panel {
+            position: relative;
+            height: 300px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            background-color: #fff;
+            border: 5px solid #2c3e50;
+        }
+        
+        .panel:hover {
+            transform: scale(1.02);
+        }
+        
+        .panel-content {
+            display: flex;
+            height: 100%;
+        }
+        
+        .panel-image {
+            flex: 7;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .panel-text {
+            flex: 3;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(to bottom, #f9f9f9, #e6e6e6);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .speech-bubble {
+            position: absolute;
+            background-color: white;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            max-width: 200px;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+        
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+        
+        .character {
+            position: absolute;
+            bottom: 0;
+            width: 150px;
+            height: 90%;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            transition: transform 0.3s ease;
+            z-index: 5;
+        }
+        
+        .character:hover {
+            transform: scale(1.05);
+        }
+        
+        .bully {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><rect x="30" y="50" width="40" height="100" fill="%23e67e22"/><circle cx="50" cy="40" r="25" fill="%23f1c40f"/><path d="M40 100 L20 150 L40 160 L60 150 L60 100" fill="%232ecc71"/><rect x="25" y="40" width="10" height="5" fill="%23333"/><rect x="65" y="40" width="10" height="5" fill="%23333"/><path d="M35 30 Q50 20 65 30" stroke="%23333" stroke-width="2" fill="none" /></svg>');
+        }
+        
+        .victim {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><rect x="30" y="50" width="40" height="100" fill="%233498db"/><circle cx="50" cy="40" r="25" fill="%23bdc3c7"/><path d="M40 100 L20 150 L40 160 L60 150 L60 100" fill="%239b59b6"/><rect x="25" y="40" width="10" height="5" fill="%23333"/><rect x="65" y="40" width="10" height="5" fill="%23333"/><path d="M35 35 Q50 45 65 35" stroke="%23333" stroke-width="2" fill="none" /></svg>');
+        }
+        
+        .protector {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><rect x="30" y="50" width="40" height="100" fill="%23e74c3c"/><circle cx="50" cy="40" r="25" fill="%23f39c12"/><path d="M40 100 L20 150 L40 160 L60 150 L60 100" fill="%23c0392b"/><rect x="25" y="40" width="10" height="5" fill="%23333"/><rect x="65" y="40" width="10" height="5" fill="%23333"/><path d="M30 30 Q50 20 70 30" stroke="%23333" stroke-width="2" fill="none" /></svg>');
+        }
+        
+        .teacher {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200"><rect x="30" y="50" width="40" height="100" fill="%23844 %23844 %23844"/><circle cx="50" cy="40" r="25" fill="%2395a5a6"/><path d="M40 100 L20 150 L40 160 L60 150 L60 100" fill="%2316a085"/><rect x="25" y="40" width="10" height="5" fill="%23333"/><rect x="65" y="40" width="10" height="5" fill="%23333"/><path d="M35 30 Q50 25 65 30" stroke="%23333" stroke-width="2" fill="none" /></svg>');
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-nav {
+            background-color: #3498db;
+        }
+        
+        .btn-nav:hover {
+            background-color: #2980b9;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            background: linear-gradient(to right, #2ecc71, #3498db);
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        /* Halaman komik - disesuaikan untuk setiap halaman */
+        .comic-page {
+            display: none;
+        }
+        
+        .comic-page.active {
+            display: block;
+        }
+        
+        /* Warna berbeda untuk setiap halaman */
+        .page-1 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #3498db; }
+        .page-2 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #9b59b6; }
+        .page-3 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #e74c3c; }
+        .page-4 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #2ecc71; }
+        .page-5 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #f39c12; }
+        .page-6 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #1abc9c; }
+        .page-7 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #d35400; }
+        .page-8 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #34495e; }
+        .page-9 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #7f8c8d; }
+        .page-10 .panel-image { background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), #27ae60; }
+        
+        .page-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .page-btn {
+            padding: 8px 15px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .page-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .page-btn.active {
+            background-color: #3498db;
+        }
+        
+        @media (max-width: 768px) {
+            .panel-content {
+                flex-direction: column;
+            }
+            
+            .panel {
+                height: auto;
+                min-height: 400px;
+            }
+            
+            .panel-image {
+                min-height: 200px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GUARDIAN OF HARMONY</h1>
+            <p class="subtitle">Sebuah Komik tentang Menghentikan Bullying di Sekolah - 10 Halaman</p>
+        </header>
+        
+        <div class="comic-controls">
+            <button class="btn btn-nav" id="prevBtn">Sebelumnya</button>
+            <div class="page-indicator" id="pageIndicator">Halaman 1/10</div>
+            <button class="btn btn-nav" id="nextBtn">Berikutnya</button>
+        </div>
+        
+        <div class="page-nav">
+            <button class="page-btn" data-page="0">1</button>
+            <button class="page-btn" data-page="1">2</button>
+            <button class="page-btn" data-page="2">3</button>
+            <button class="page-btn" data-page="3">4</button>
+            <button class="page-btn" data-page="4">5</button>
+            <button class="page-btn" data-page="5">6</button>
+            <button class="page-btn" data-page="6">7</button>
+            <button class="page-btn" data-page="7">8</button>
+            <button class="page-btn" data-page="8">9</button>
+            <button class="page-btn" data-page="9">10</button>
+        </div>
+        
+        <!-- Halaman 1 -->
+        <div class="comic-page page-1 active">
+            <div class="comic-container">
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character bully" style="left: 20%;"></div>
+                            <div class="character victim" style="left: 60%;"></div>
+                            <div class="speech-bubble" style="top: 30%; left: 30%;">"Dasar kutu buku! Pinjamkan uang sakumu untuk kami!"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Halaman 1: Awal Penindasan</h2>
+                            <p>Andi, siswa kelas 10, menjadi korban bullying oleh Rudi dan teman-temannya di halaman sekolah. Mereka memaksanya untuk memberikan uang saku.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character victim" style="left: 30%;"></div>
+                            <div class="character bully" style="left: 60%;"></div>
+                            <div class="speech-bubble" style="top: 40%; left: 50%;">"Jangan bilang siapa-siapa, atau besok kami hajar kau lebih keras!"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Ancaman</h2>
+                            <p>Rudi mengancam Andi untuk tidak melaporkan perbuatan mereka kepada guru atau siapapun. Andi merasa takut dan tidak berdaya.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character victim" style="left: 50%;"></div>
+                            <div class="speech-bubble" style="top: 40%; left: 30%;">"Aku lelah dengan ini semua... Harus bagaimana lagi?"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Keputusasaan</h2>
+                            <p>Sendirian di kamarnya, Andi merenungkan nasibnya. Dia merasa tertekan dan tidak tahu harus berbuat apa untuk menghentikan bullying ini.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman 2 -->
+        <div class="comic-page page-2">
+            <div class="comic-container">
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character protector" style="left: 50%;"></div>
+                            <div class="speech-bubble" style="top: 30%; left: 30%;">"Ada yang tidak beres dengan Andi akhir-akhir ini. Aku harus menanyainya."</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Halaman 2: Perhatian</h2>
+                            <p>Sinta, ketua OSIS yang peduli, memperhatikan perubahan perilaku Andi. Dia merasa ada sesuatu yang tidak beres.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character protector" style="left: 40%;"></div>
+                            <div class="character victim" style="left: 70%;"></div>
+                            <div class="speech-bubble" style="top: 40%; left: 50%;">"Andi, kamu baik-baik saja? Kamu terlihat murung akhir-akhir ini."</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Pendekatan</h2>
+                            <p>Sinta mendekati Andi di perpustakaan dan menanyakan keadaannya dengan lembut. Andi terkejut ada yang peduli.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character victim" style="left: 50%;"></div>
+                            <div class="speech-bubble" style="top: 40%; left: 30%;">"Aku... aku tidak bisa cerita. Mereka akan menyakitiku lagi."</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Keraguan</h2>
+                            <p>Andi ragu untuk bercerita karena takut akan balas dendam dari Rudi dan teman-temannya. Dia memilih untuk diam.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman 3 -->
+        <div class="comic-page page-3">
+            <div class="comic-container">
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character bully" style="left: 20%;"></div>
+                            <div class="character victim" style="left: 60%;"></div>
+                            <div class="speech-bubble" style="top: 30%; left: 30%;">"Kau pikir bisa menghindar dari kami? Berikan tasmu!"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Halaman 3: Eskalasi</h2>
+                            <p>Keesokan harinya, Rudi dan teman-temannya kembali mengganggu Andi. Kali ini mereka lebih agresif dan mengambil tasnya.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character protector" style="left: 30%;"></div>
+                            <div class="character bully" style="left: 60%;"></div>
+                            <div class="speech-bubble" style="top: 40%; left: 50%;">"Hentikan! Apa yang kalian lakukan? Kembalikan tasnya!"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Intervensi</h2>
+                            <p>Sinta melihat kejadian itu dan segera turun tangan. Dengan berani dia menegur Rudi dan kawan-kawannya.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character bully" style="left: 50%;"></div>
+                            <div class="speech-bubble" style="top: 40%; left: 30%;">"Hah? Urusan apa kau campuri? Ini bukan urusanmu!"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Penolakan</h2>
+                            <p>Rudi marah karena dicampuri. Dia mencoba mengintimidasi Sinta, tetapi Sinta tidak gentar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Halaman 4 -->
+        <div class="comic-page page-4">
+            <div class="comic-container">
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character protector" style="left: 40%;"></div>
+                            <div class="character bully" style="left: 70%;"></div>
+                            <div class="speech-bubble" style="top: 30%; left: 50%;">"Ini urusan semua orang! Bullying adalah kejahatan!"</div>
+                        </div>
+                        <div class="panel-text">
+                            <h2>Halaman 4: Perlawanan</h2>
+                            <p>Sinta tidak mundur. Dia menjelaskan dengan tegas bahwa perbuatan Rudi dan kawan-kawannya adalah salah dan merugikan.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="panel-image">
+                            <div class="character protector" style="left: 30%;"></div>
+                            <div class="character victim" style="
